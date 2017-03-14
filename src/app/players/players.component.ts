@@ -5,7 +5,7 @@ import { MdSnackBar } from '@angular/material';
 import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
 
-import { IPlayer, IInning, IPosition } from '../../services';
+import { Player, Inning, Position } from '../../services';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -15,8 +15,8 @@ import { Observable } from 'rxjs';
 })
 export class PlayersComponent implements OnInit, OnDestroy, AfterViewInit {
   items: FirebaseListObservable<any>;
-  players: IPlayer[];
-  filteredPlayers: IPlayer[] = new Array<IPlayer>();
+  players: Player[];
+  filteredPlayers: Player[] = new Array<Player>();
   playersSubscription: any;
 
 
@@ -27,7 +27,7 @@ export class PlayersComponent implements OnInit, OnDestroy, AfterViewInit {
     private _snackBarService: MdSnackBar,
     public af: AngularFire,
     public media: TdMediaService) {
-    this.players = new Array<IPlayer>();
+    this.players = new Array<Player>();
 
 
 
@@ -76,14 +76,14 @@ export class PlayersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   search(displayName: string = ''): void {
 
-    this.filteredPlayers = this.players.filter((player: IPlayer) => {
+    this.filteredPlayers = this.players.filter((player: Player) => {
       return player.name.toLowerCase().indexOf(displayName.toLowerCase()) > -1;
     });
   }
 
   createLineupData(): void {
     for (let i: number = 1; i <= 6; i++) {
-      let inning: IInning = <IInning>({
+      let inning: Inning = <Inning>({
         label: i.toString(),
         name: i.toString(),
         abbreviation: i.toString(),
@@ -105,7 +105,7 @@ export class PlayersComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.items = this.af.database.list('/players');
     for (let i = 0; i < 10; i++) {
-      let player = <IPlayer>({
+      let player = <Player>({
         name: 'Player ' + i,
         email: 'player' + i + '@gmail.com',
         phone: '703-349-9059',
@@ -146,9 +146,9 @@ export class PlayersComponent implements OnInit, OnDestroy, AfterViewInit {
 
 }
 
-function toPlayer(json: any): IPlayer {
+function toPlayer(json: any): Player {
   //console.log("json: " + JSON.stringify(json,null,2));
-  return <IPlayer>({
+  return <Player>({
     id: json.$key,
     name: json.name,
     email: json.email,
@@ -161,58 +161,58 @@ function toPlayer(json: any): IPlayer {
   });
 }
 
-function toPosition(total: number, num: number): IPosition {
+function toPosition(total: number, num: number): Position {
   if (total === 10) {
     switch (num) {
       case 0:
-        return <IPosition>({ id: '', sortValue: 0, abbreviation: "BN", restricted: 0, name: "Bench", label: 'Bench' });
+        return <Position>({ id: '', sortValue: 0, abbreviation: "BN", restricted: 0, name: "Bench", label: 'Bench' });
       case 1:
-        return <IPosition>({ id: '', sortValue: 1, abbreviation: "P", restricted: 0, name: "Pitcher", label: 'Pitcher' });
+        return <Position>({ id: '', sortValue: 1, abbreviation: "P", restricted: 0, name: "Pitcher", label: 'Pitcher' });
       case 2:
-        return <IPosition>({ id: '', sortValue: 2, abbreviation: "C", restricted: 0, name: "Catcher", label: 'Catcher' });
+        return <Position>({ id: '', sortValue: 2, abbreviation: "C", restricted: 0, name: "Catcher", label: 'Catcher' });
       case 3:
-        return <IPosition>({ id: '', sortValue: 3, abbreviation: "1B", restricted: 0, name: "1st Base", label: 'First Base' });
+        return <Position>({ id: '', sortValue: 3, abbreviation: "1B", restricted: 0, name: "1st Base", label: 'First Base' });
       case 4:
-        return <IPosition>({ id: '', sortValue: 4, abbreviation: "2B", restricted: 0, name: "2nd Base", label: '2nd Base' });
+        return <Position>({ id: '', sortValue: 4, abbreviation: "2B", restricted: 0, name: "2nd Base", label: '2nd Base' });
       case 5:
-        return <IPosition>({ id: '', sortValue: 5, abbreviation: "3B", restricted: 0, name: "3rd Base", label: '3rd Base' });
+        return <Position>({ id: '', sortValue: 5, abbreviation: "3B", restricted: 0, name: "3rd Base", label: '3rd Base' });
       case 6:
-        return <IPosition>({ id: '', sortValue: 6, abbreviation: "SS", restricted: 0, name: "Shortstop", label: 'Shortstop' });
+        return <Position>({ id: '', sortValue: 6, abbreviation: "SS", restricted: 0, name: "Shortstop", label: 'Shortstop' });
       case 7:
-        return <IPosition>({ id: '', sortValue: 7, abbreviation: "LF", restricted: 0, name: "Left Field", label: 'Left Field' });
+        return <Position>({ id: '', sortValue: 7, abbreviation: "LF", restricted: 0, name: "Left Field", label: 'Left Field' });
       case 8:
-        return <IPosition>({ id: '', sortValue: 8, abbreviation: "LCF", restricted: 0, name: "Left Center Field", label: 'Left Center Field' });
+        return <Position>({ id: '', sortValue: 8, abbreviation: "LCF", restricted: 0, name: "Left Center Field", label: 'Left Center Field' });
       case 9:
-        return <IPosition>({ id: '', sortValue: 9, abbreviation: "RCF", restricted: 0, name: "Right Center Field", label: 'Right Center Field' });
+        return <Position>({ id: '', sortValue: 9, abbreviation: "RCF", restricted: 0, name: "Right Center Field", label: 'Right Center Field' });
       case 10:
-        return <IPosition>({ id: '', sortValue: 10, abbreviation: "RF", restricted: 0, name: "Right Field", label: 'Right Field' });
+        return <Position>({ id: '', sortValue: 10, abbreviation: "RF", restricted: 0, name: "Right Field", label: 'Right Field' });
       default:
-        return <IPosition>({ id: '', sortValue: 0, abbreviation: "BN", restricted: 0, name: "Bench", label: 'Bench' });
+        return <Position>({ id: '', sortValue: 0, abbreviation: "BN", restricted: 0, name: "Bench", label: 'Bench' });
     }
   } else {
     switch (num) {
       case 0:
-        return <IPosition>({ id: '', sortValue: 0, abbreviation: "BN", restricted: 0, name: "Bench", label: 'Bench' });
+        return <Position>({ id: '', sortValue: 0, abbreviation: "BN", restricted: 0, name: "Bench", label: 'Bench' });
       case 1:
-        return <IPosition>({ id: '', sortValue: 1, abbreviation: "P", restricted: 0, name: "Pitcher", label: 'Pitcher' });
+        return <Position>({ id: '', sortValue: 1, abbreviation: "P", restricted: 0, name: "Pitcher", label: 'Pitcher' });
       case 2:
-        return <IPosition>({ id: '', sortValue: 2, abbreviation: "C", restricted: 0, name: "Catcher", label: 'Catcher' });
+        return <Position>({ id: '', sortValue: 2, abbreviation: "C", restricted: 0, name: "Catcher", label: 'Catcher' });
       case 3:
-        return <IPosition>({ id: '', sortValue: 3, abbreviation: "1B", restricted: 0, name: "1st Base", label: 'First Base' });
+        return <Position>({ id: '', sortValue: 3, abbreviation: "1B", restricted: 0, name: "1st Base", label: 'First Base' });
       case 4:
-        return <IPosition>({ id: '', sortValue: 4, abbreviation: "2B", restricted: 0, name: "2nd Base", label: '2nd Base' });
+        return <Position>({ id: '', sortValue: 4, abbreviation: "2B", restricted: 0, name: "2nd Base", label: '2nd Base' });
       case 5:
-        return <IPosition>({ id: '', sortValue: 5, abbreviation: "3B", restricted: 0, name: "3rd Base", label: '3rd Base' });
+        return <Position>({ id: '', sortValue: 5, abbreviation: "3B", restricted: 0, name: "3rd Base", label: '3rd Base' });
       case 6:
-        return <IPosition>({ id: '', sortValue: 6, abbreviation: "SS", restricted: 0, name: "Shortstop", label: 'Shortstop' });
+        return <Position>({ id: '', sortValue: 6, abbreviation: "SS", restricted: 0, name: "Shortstop", label: 'Shortstop' });
       case 7:
-        return <IPosition>({ id: '', sortValue: 7, abbreviation: "LF", restricted: 0, name: "Left Field", label: 'Left Field' });
+        return <Position>({ id: '', sortValue: 7, abbreviation: "LF", restricted: 0, name: "Left Field", label: 'Left Field' });
       case 8:
-        return <IPosition>({ id: '', sortValue: 8, abbreviation: "LCF", restricted: 0, name: "Center Field", label: 'Center Field' });
+        return <Position>({ id: '', sortValue: 8, abbreviation: "LCF", restricted: 0, name: "Center Field", label: 'Center Field' });
       case 9:
-        return <IPosition>({ id: '', sortValue: 9, abbreviation: "RF", restricted: 0, name: "Right Field", label: 'Right Field' });
+        return <Position>({ id: '', sortValue: 9, abbreviation: "RF", restricted: 0, name: "Right Field", label: 'Right Field' });
       default:
-        return <IPosition>({ id: '', sortValue: 0, abbreviation: "BN", restricted: 0, name: "Bench", label: 'Bench' });
+        return <Position>({ id: '', sortValue: 0, abbreviation: "BN", restricted: 0, name: "Bench", label: 'Bench' });
     }
   }
 

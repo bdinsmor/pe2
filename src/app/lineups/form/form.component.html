@@ -1,65 +1,58 @@
-<td-layout-nav >
-  <div td-toolbar-content layout="row" layout-align="center center" flex>
-    <span>Ponytail Express</span>
-    
-  </div>
+<td-layout-nav>
+    <div td-toolbar-content layout="row" layout-align="center center" flex>
+        <span>Ponytail Express</span>
+
+    </div>
 
     <md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
-      <md-card-title>{{displayName}}</md-card-title>
-      <md-divider></md-divider>
-      <md-card-content class="push-bottom-none">
-        <form #userForm="ngForm">
-          <div layout="row">
-            <md-slide-toggle [(ngModel)]="finished" name="finished">Game Completed</md-slide-toggle>
-            
-              <md2-datepicker [(ngModel)]="date" name="date"></md2-datepicker>
-              <md-input-container flex> 
-              <input mdInput
-                      #displayNameElement
-                      #displayNameControl="ngModel"
-                      type="text" 
-                      placeholder="Opponent Name" 
-                      [(ngModel)]="opponentName" 
-                      name="opponentName" 
-                      maxlength="30" 
-                      required>
-              <md-hint align="start">
-                <span [hidden]="displayNameControl.pristine" class="tc-red-600">
+        <md-card-title>{{displayName}}</md-card-title>
+        <md-divider></md-divider>
+        <md-card-content class="push-bottom-none">
+            <form #userForm="ngForm">
+                <div layout="row">
+                    <md-slide-toggle [(ngModel)]="finished" name="finished">Game Completed</md-slide-toggle>
+
+                    <md2-datepicker [(ngModel)]="date" name="date"></md2-datepicker>
+                    <md-input-container flex>
+                        <input mdInput #displayNameElement #displayNameControl="ngModel" type="text" placeholder="Opponent Name" [(ngModel)]="opponentName" name="opponentName" maxlength="30" required>
+                        <md-hint align="start">
+                            <span [hidden]="displayNameControl.pristine" class="tc-red-600">
                   <span [hidden]="!displayNameControl.errors?.required">Required</span>
-                </span>
-              </md-hint>
-              <md-hint align="end">{{displayNameElement.value.length}} / 30</md-hint>
-            </md-input-container>
-          </div>
-          <div layout="row">
-            <table td-data-table>
-  <th td-data-table-column>
-    <span>Player Name</span>
-  </th>
-  <th td-data-table-column *ngFor="let inning of innings">
-    {{inning.label}}
-  </th>
-  <tr td-data-table-row *ngFor="let player of playing">
-    <td td-data-table-cell (click)="loadPlayer(player)">
-      <button md-button>{{player.name}}</button>
-    </td>
-    <td td-data-table-cell *ngFor="let inning of innings">
-     <md-select placeholder="Position" [ngModelOptions]="{standalone: true}">  <!--[(ngModel)]="player.positions[inning.label]"   need to populate player innings so this will work -->
-      <md-option *ngFor="let position of positions" [value]="position">
-        {{position.abbreviation}}
-      </md-option>
-    </md-select>
-    </td>
-  </tr>
-</table>
-          </div>
-        </form>
-      </md-card-content>
-      <md-divider></md-divider>
-      <md-card-actions>
-        <button md-button [disabled]="!userForm.form.valid" color="primary" (click)="save()">SAVE</button>
-        <button md-button (click)="goBack()">CANCEL</button>
-      </md-card-actions>
+                            </span>
+                        </md-hint>
+                        <md-hint align="end">{{displayNameElement.value.length}} / 30</md-hint>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <table td-data-table>
+                        <th td-data-table-column>
+                            <span>Player Name</span>
+                        </th>
+                        <th td-data-table-column *ngFor="let inning of innings">
+                            {{inning.label}}
+                        </th>
+                        <tr td-data-table-row *ngFor="let player of playing">
+                            <td td-data-table-cell (click)="loadPlayer(player)">
+                                <button md-button>{{player | json}}</button>
+                            </td>
+                            <td td-data-table-cell *ngFor="let inning of innings">
+                                <md-select floatPlaceholder="never" placeholder="Position">
+                                    <!--" [(ngModel)="player.positions[inning.sortValue]"  need to populate player innings so this will work -->
+                                    <md-option *ngFor="let position of positions" [value]="position">
+                                        {{position.abbreviation}}
+                                    </md-option>
+                                </md-select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </md-card-content>
+        <md-divider></md-divider>
+        <md-card-actions>
+            <button md-button [disabled]="!userForm.form.valid" color="primary" (click)="save()">SAVE</button>
+            <button md-button (click)="goBack()">CANCEL</button>
+        </md-card-actions>
     </md-card>
- 
+
 </td-layout-nav>

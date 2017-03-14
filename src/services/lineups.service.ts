@@ -1,53 +1,77 @@
 import { Injectable } from '@angular/core';
-import { IPlayer } from './players.service';
+import { Player } from './players.service';
 import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 
-export interface ILineup {
+export class Lineup {
   name: string;
   id: string;
   description: string;
   date: Date;
   opponentName: string;
   finished: number;
-  playing: IPlayer[];
-  notPlaying: IPlayer[];
+  playing: Player[];
+  notPlaying: Player[];
+  constructor() {
+    this.playing = new Array<Player>();
+    this.notPlaying = new Array<Player>();
+  }
 }
 
-export interface IPosition {
+export class Position {
   label: string;
   id: string;
   abbreviation: string;
   name: string;
-  sortValue:number;
+  sortValue: number;
   restricted: number;
 }
 
 
-export interface IGamePosition {
+export class GamePosition {
   label: string;
   id: string;
   abbreviation: string;
   name: string;
-  sortValue:number;
+  sortValue: number;
   restricted: number;
-  player: IPlayer;
+  player: Player;
+  constructor() {
+    this.player = new Player();
+  }
 }
 
-export interface IInning {
+export class Inning {
   label: string;
   id: string;
   abbreviation: string;
   name: string;
-  sortValue:number;
+  sortValue: number;
+  constructor() {
+    this.label = '1st';
+    this.id = '';
+    this.abbreviation = '1st';
+    this.name = '1st';
+    this.sortValue = 1;
+  }
 }
-export interface IPlayerInning {
+
+export class PlayerInning {
   // keep track of what position the player played this inning
-  inning: IInning;
-  position: IPosition;
+  inning: Inning;
+  position: Position;
+  constructor() {
+    this.inning = new Inning();
+    this.position = new Position();
+  }
 }
-export interface IGameInning {
-  inning: IInning;
-  positions: IPosition[];
+export class GameInning {
+  inning: Inning;
+  positions: Position[];
+}
+
+function createGameInning(): GameInning {
+ let gi:GameInning = new GameInning();
+ return gi;
 }
 
 // left off keeping track of what innings have what players, and what positions players are playing for each inning
@@ -59,12 +83,12 @@ export interface IGameInning {
 @Injectable()
 export class LineupsService {
 
-  constructor(public af:AngularFire) {
+  constructor(public af: AngularFire) {
 
   }
 
   getInnings(): any {
-   return this.af.database.list('/innings');
+    return this.af.database.list('/innings');
   }
 
   getPositions(): any {
@@ -73,5 +97,57 @@ export class LineupsService {
 
   getPlayers(): any {
     return this.af.database.list('/players');
+  }
+
+  // tslint:disable-next-line:member-ordering
+  static getInning(num: number) {
+    let inning: Inning = new Inning();
+    inning.label = (num + 1).toString();
+    inning.sortValue = num + 1;
+    switch (num) {
+      case 0:
+        inning.abbreviation = '1st';
+        break;
+      case 1:
+        inning.abbreviation = '2nd';
+        break;
+      case 2:
+        inning.abbreviation = '3rd';
+        break;
+      case 3:
+        inning.abbreviation = '4th';
+        break;
+      case 4:
+        inning.abbreviation = '5th';
+        break;
+      case 5:
+        inning.abbreviation = '6th';
+        break;
+      default:
+        inning.abbreviation = '1st';
+    }
+    return inning;
+  }
+
+  static getDefaultPosition() {
+    let position: Position = new Position();
+    position.abbreviation = 'BN';
+    position.sortValue = 0;
+    position.name = 'BENCH';
+    position.label = 'BN';
+    position.restricted = 0;
+    return position;
+  }
+
+  static createPlayerInnings(): PlayerInning[] {
+    let playerInnings: PlayerInning[] = new Array<PlayerInning>();
+    for (let i = 0; i < 6; i++) {
+      let pi: PlayerInning = new PlayerInning();
+      let inning = this.getInning(i);
+      pi.inning = inning;
+      pi.position = this.getDefaultPosition();
+      playerInnings.push(pi);
+    }
+    return playerInnings;
   }
 }

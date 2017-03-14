@@ -37,6 +37,7 @@
     "Ilsun Park <ilsun.park@teradata.com>"
   ],
   "dependencies": {
+    "@angular/cli": "^1.0.0-rc.1",
     "@angular/common": "2.4.5",
     "@angular/compiler": "2.4.5",
     "@angular/core": "2.4.5",
@@ -50,6 +51,7 @@
     "@angular/router": "3.4.5",
     "@covalent/charts": "1.0.0-beta.2",
     "@covalent/core": "1.0.0-beta.2",
+    "@covalent/data": "^0.4.0",
     "@covalent/dynamic-forms": "1.0.0-beta.2",
     "@covalent/highlight": "1.0.0-beta.2",
     "@covalent/http": "1.0.0-beta.2",

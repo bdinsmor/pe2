@@ -1,6 +1,6 @@
-import { IPosition, IPlayerInning, IInning } from './lineups.service';
+import { Position, PlayerInning, Inning } from './lineups.service';
 
-export class IPlayer {
+export class Player {
   name: string;
   email: string;
   phone: string;
@@ -14,7 +14,7 @@ export class IPlayer {
 
 }
 
-export class IGamePlayer {
+export class GamePlayer {
   name: string;
   email: string;
   phone: string;
@@ -25,25 +25,25 @@ export class IGamePlayer {
   season: string;
   id: string;
   admin: number;
-  positions: IPlayerInning[];
-  hitting: IAtBat[];
+  positions: PlayerInning[];
+  hitting: AtBat[];
 
 }
 
-export class IAtBat {
-  inning: IInning;
+export class AtBat {
+  inning: Inning;
   pitches: number;
   scored: number;
-  hittype: IHitType;
+  hittype: HitType;
   totalbases: number;
   strikeout: number;  // yes/no
   fouls: number;
 }
 
-export class IHitType {
+export class HitType {
   label: string; // single, double, triple, homerun, flyout, groundout
   bases: number;
-  position: IPosition; // where did the hit go
+  position: Position; // where did the hit go
   out: number; // get out or on base?
 
 }

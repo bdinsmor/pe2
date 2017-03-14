@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { TdMediaService } from '@covalent/core';
 
-import { IPlayer } from '../../../services';
+import { Player } from '../../../services';
 
 @Component({
   selector: 'qs-player-form',
@@ -17,7 +17,7 @@ export class PlayersFormComponent implements OnInit, OnDestroy, AfterViewInit {
   email: string;
   id: string;
   admin: boolean;
-  player: IPlayer;
+  player: Player;
   action: string;
   image: string;
   playerSubscription: any;
@@ -74,7 +74,7 @@ export class PlayersFormComponent implements OnInit, OnDestroy, AfterViewInit {
   save(): void {
     let siteAdmin: number = (this.admin ? 1 : 0);
     let now: Date = new Date();
-    this.player = <IPlayer>({
+    this.player = <Player>({
       name: this.displayName,
       email: this.email,
       description: '',
@@ -106,10 +106,10 @@ export class PlayersFormComponent implements OnInit, OnDestroy, AfterViewInit {
 }
 
 
-function toPlayer(id: string, r: any): IPlayer {
+function toPlayer(id: string, r: any): Player {
 
   let json = r;
-  return <IPlayer>({
+  return <Player>({
     id: id,
     name: json.name,
     email: json.email,

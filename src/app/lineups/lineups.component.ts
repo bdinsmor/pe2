@@ -5,7 +5,7 @@ import { MdSnackBar } from '@angular/material';
 import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
 
-import { ILineup, IGamePlayer, IInning } from '../../services';
+import { Lineup, GamePlayer, Inning } from '../../services';
 
 @Component({
   selector: 'qs-lineups',
@@ -14,8 +14,8 @@ import { ILineup, IGamePlayer, IInning } from '../../services';
 })
 export class LineupsComponent implements AfterViewInit {
   items: FirebaseListObservable<any>;
-  lineups: ILineup[];
-  filteredLineups: ILineup[];
+  lineups: Lineup[];
+  filteredLineups: Lineup[];
   lineupSubscription:any;
 
   constructor(private _titleService: Title,
@@ -25,14 +25,14 @@ export class LineupsComponent implements AfterViewInit {
     private _snackBarService: MdSnackBar,
     public af: AngularFire,
     public media: TdMediaService) {
-     this.lineups = new Array<ILineup>();
+     this.lineups = new Array<Lineup>();
   }
 
   loadData() {
     this._loadingService.register("lineups.list");
     this.lineupSubscription = this.af.database.list('/lineups').subscribe(lineups => {
       
-      this.filteredLineups = lineups.map(toLineup);
+      this.filteredLineups = lineups.map(this.toLineup);
       console.log("lineups: " + JSON.stringify(this.filteredLineups,null,2));
       this.lineups = this.filteredLineups;
       this._loadingService.resolve("lineups.list");
@@ -66,7 +66,7 @@ export class LineupsComponent implements AfterViewInit {
   }
 
   search(name: string = ''): void {
-    this.filteredLineups = this.lineups.filter((lineup: ILineup) => {
+    this.filteredLineups = this.lineups.filter((lineup: Lineup) => {
       return lineup.name.toLowerCase().indexOf(name.toLowerCase()) > -1;
     });
   }
@@ -80,7 +80,7 @@ export class LineupsComponent implements AfterViewInit {
   createPlayers(): void {
     this.items = this.af.database.list('/lineups');
     for (let i = 0; i < 10; i++) {
-      let lineup = <ILineup>({
+      let lineup = <Lineup>({
         name: 'Player ' + i,
         opponentName: 'Opponent ' + i,
         description: '',
@@ -105,10 +105,10 @@ export class LineupsComponent implements AfterViewInit {
         if (confirm) {
           this._loadingService.register('lineups.list');
           /*this._playersService.delete(id).subscribe(() => {
-            this.players = this.players.filter((player: IPlayer) => {
+            this.players = this.players.filter((player: Player) => {
               return player.id !== id;
             });
-            this.filteredPlayers = this.filteredPlayers.filter((player: IPlayer) => {
+            this.filteredPlayers = this.filteredPlayers.filter((player: Player) => {
               return player.id !== id;
             });
             this._loadingService.resolve('players.list');
@@ -121,12 +121,10 @@ export class LineupsComponent implements AfterViewInit {
       });
   }
 
-}
-
-function toLineup(json: any): ILineup {
+  toLineup(json: any): Lineup {
   
  // console.log("r: " + JSON.stringify(r,null,2));
-  return <ILineup>({
+  return <Lineup>({
     name: json.name,
     description: json.description,
     opponentName: json.opponentName,
@@ -135,17 +133,17 @@ function toLineup(json: any): ILineup {
     season: json.season,
     id: json.$key,
     finished: json.finished,
-    playing: toGamePlayers(json.playing),
-    notPlaying: toGamePlayers(json.notPlaying),
+    playing: this.toGamePlayers(json.playing),
+    notPlaying: this.toGamePlayers(json.notPlaying),
   });
 }
 
-function toGamePlayers(players) {
-  return players.map(toGamePlayer);
+toGamePlayers(players) {
+  return players.map(this.toGamePlayer);
 }
 
-function toGamePlayer(player) {
-  return <IGamePlayer>({
+toGamePlayer(player) {
+  return <GamePlayer>({
     id: player.$key,
     name: player.name,
     email: player.email,
@@ -156,5 +154,12 @@ function toGamePlayer(player) {
     year: player.year,
     season: player.season,
     innings: player.innings,
+    admin: player.admin,
+    positions: player.positions,
+    hitting: player.hitting,
   });
+
+}
+
+
 }

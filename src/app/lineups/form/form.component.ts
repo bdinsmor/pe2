@@ -5,7 +5,7 @@ import { Md2Datepicker } from 'md2';
 import { TdMediaService } from '@covalent/core';
 import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 
-import { ILineup, IPlayer, IPlayerInning, IPosition, IInning, IGamePlayer, LineupsService } from '../../../services';
+import { Lineup, Player, PlayerInning, Position, Inning, GamePlayer, LineupsService } from '../../../services';
 
 @Component({
   selector: 'qs-lineup-form',
@@ -19,19 +19,19 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
   description: string;
   id: string;
   finished: boolean;
-  lineup: ILineup;
+  lineup: Lineup;
   opponentName: string;
   field: string;
   date: Date;
-  playing: IGamePlayer[];
-  notPlaying: IPlayer[];
+  playing: GamePlayer[];
+  notPlaying: Player[];
   action: string;
-  positions: IPosition[];
-  innings: IInning[];
+  positions: Position[];
+  innings: Inning[];
 
   constructor(public af: AngularFire,
     private _route: ActivatedRoute,
-    private _lineupsService: LineupsService,
+    public _lineupsService: LineupsService,
     public media: TdMediaService) { }
 
   goBack(): void {
@@ -89,7 +89,7 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
   }
 
   toPosition(data) {
-    return <IPosition>({
+    return <Position>({
       id: data.id,
       label: data.label,
       name: data.name,
@@ -98,7 +98,7 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
   }
 
   toInning(data) {
-    return <IInning>({
+    return <Inning>({
       id: data.id,
       label: data.label,
       abbreviation: data.abbreviation,
@@ -108,9 +108,9 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
   }
 
   getPlayerInnings() {
-    let inn = new Array<IPlayerInning>();
+    let inn = new Array<PlayerInning>();
     for (let i = 0; i < this.innings.length; i++) {
-      inn.push(<IPlayerInning>({
+      inn.push(<PlayerInning>({
         id: '',
         inning: this.innings[i],
         position: null,
@@ -119,8 +119,9 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
     return inn;
   }
 
-  toGamePlayer(data): IGamePlayer {
-    return <IGamePlayer>({
+  toGamePlayer(data): GamePlayer {
+   let playerPositions = LineupsService.createPlayerInnings();
+    return <GamePlayer>({
       id: data.id,
       name: data.name,
       email: data.email,
@@ -131,14 +132,14 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
       year: data.season,
       season: data.season,
       admin: data.admin,
-      positions: null
+      positions: playerPositions,
     });
   };
 
   save(): void {
     let gameFinished: number = (this.finished ? 1 : 0);
     let now: Date = new Date();
-    this.lineup = <ILineup>({
+    this.lineup = <Lineup>({
       id: this.id,
       name: this.name,
       description: this.description,
