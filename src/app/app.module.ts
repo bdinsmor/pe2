@@ -2,6 +2,7 @@ import { NgModule, Type } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 
 import { CovalentCoreModule } from '@covalent/core';
+import { CovalentStepsModule } from '@covalent/core';
 import { CovalentHttpModule, IHttpInterceptor } from '@covalent/http';
 import { CovalentChartsModule } from '@covalent/charts';
 import { CovalentExpansionPanelModule } from '@covalent/core';
@@ -17,6 +18,8 @@ import { LoginComponent } from './login/login.component';
 import { appRoutes, appRoutingProviders } from './app.routes';
 import { RequestInterceptor } from '../config/interceptors/request.interceptor';
 import { Md2Module } from 'md2';
+import { DragulaModule } from 'ng2-dragula';
+import {ColorPickerModule} from 'angular2-color-picker';
 
 import { AngularFireModule, AuthMethods, AuthProviders } from 'angularfire2';
 
@@ -48,8 +51,11 @@ const firebaseConfig = {
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     BrowserModule,
+    DragulaModule,
+    ColorPickerModule,
     Md2Module.forRoot(),
     CovalentCoreModule.forRoot(),
+    CovalentStepsModule.forRoot(),
     CovalentChartsModule.forRoot(),
     CovalentExpansionPanelModule.forRoot(),
     CovalentHttpModule.forRoot({

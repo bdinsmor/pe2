@@ -16,3 +16,26 @@ a[md-icon-button] {
 td-layout-manage-list .mat-toolbar {
     font-weight: 400;
 }
+
+.md2-datepicker-trigger {
+    padding: 5px 0 12px 30px !important;
+}
+
+.md2-datepicker-input {
+    min-width: 50px !important;
+}
+
+.md2-datepicker-icon {
+    top: 13px !important;
+}
+.mat-radio-button {
+    padding-top: 8px !important;
+}
+.mat-radio-label-content {
+    padding-right: 8px !important;
+}
+
+body .mat-card md-card-title {
+    padding-bottom: 16px !important;
+    margin-bottom: 0 !important;
+}

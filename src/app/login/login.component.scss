@@ -1,7 +1,45 @@
+
+@import '~@angular/material/core/theming/all-theme';
+// Plus imports for other components in your app.
+
+// Include the base styles for Angular Material core. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+@include mat-core();
+
+
+// Apply theme for this app
+
+
+
 :host /deep/ {
     md-divider {
         display: block;
         border-top-style: solid;
         border-top-width: 1px;
     }
+}
+
+
+.login-subtitle {
+    color: rgba(25,118,210,1);
+    text-shadow:
+   -1px -1px 0 #ccc,  
+    1px -1px 0 #ccc,
+    -1px 1px 0 #ccc,
+     1px 1px 0 #ccc;
+}
+
+
+.login-content {
+    background-color: #333;
+    background: url('../../assets/icons/hitting.gif') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.mat-card {
+    background: rgba(255,255,255,0.0);
+    box-shadow: none;
 }

@@ -1,36 +1,8 @@
 <td-layout-nav>
-  <div td-toolbar-content layout="row" layout-align="center center" flex>
-    <span>Ponytail Express</span>
-  </div>
-  <td-layout-manage-list #manageList [opened]="media.registerQuery('gt-sm') | async" [mode]="(media.registerQuery('gt-sm') | async) ? 'side' : 'push'"
-    [sidenavWidth]="(media.registerQuery('gt-xs') | async) ? '257px' : '100%'">
-    <md-toolbar td-sidenav-content>
-      <span>Players</span>
-    </md-toolbar>
-    <md-nav-list td-sidenav-content (click)="!media.query('gt-sm') && manageList.close()">
-      <a md-list-item>
-        <md-icon md-list-icon>account_circle</md-icon>
-        All Players
-      </a>
-      <a md-list-item>
-        <md-icon md-list-icon>star</md-icon>
-        Favorites
-      </a>
-      <a md-list-item>
-        <md-icon md-list-icon>verified_user</md-icon>
-        Administrators
-      </a>
-      <a md-list-item>
-        <md-icon md-list-icon>supervisor_account</md-icon>
-        Non-Admins
-      </a>
-      <a md-list-item>
-        <md-icon md-list-icon>inbox</md-icon>
-        Archived
-      </a>
-    </md-nav-list>
+
+
     <div td-toolbar-content layout="row" layout-align="start center" flex>
-      <span>Players</span>
+      <span>Ponytail Express - Players</span>
       <span flex></span>
       <button md-icon-button (click)="createPlayers()"><md-icon class="md-24">view_module</md-icon></button>
       <button md-icon-button (click)="createLineupData()"><md-icon class="md-24">sort</md-icon></button>
@@ -39,7 +11,6 @@
     </div>
     <div class="md-content">
 
-    </div>
 
     <md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
       <td-search-box class="push-left push-right" placeholder="search" [alwaysVisible]="true" (searchDebounce)="search($event)"></td-search-box>
@@ -51,9 +22,9 @@
           </div>
           <template let-player let-last="last" ngFor [ngForOf]="filteredPlayers">
             
-            <md-list-item>
+            <md-list-item [style.color]="player.textColor" [style.background]="player.color">
               <md-icon md-list-avatar>person</md-icon>
-              <h3 md-line> {{player.name}} </h3>
+              <h3  md-line> {{player.name}} </h3>
               <p md-line> {{player.email}} </p>
 
 
@@ -76,8 +47,8 @@
         <button md-button class="md-primary" (click)="goBack()">BACK</button>
       </md-card-actions>
     </md-card>
-  </td-layout-manage-list>
-</td-layout-nav>
+    </div>
+ 
 <a md-fab color="accent" class="mat-fab-bottom-right" [routerLink]="['add']">
   <md-icon>add</md-icon>
 </a>

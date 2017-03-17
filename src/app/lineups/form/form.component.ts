@@ -2,10 +2,11 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 import { Md2Datepicker } from 'md2';
-import { TdMediaService } from '@covalent/core';
+import { TdMediaService, IStepChangeEvent } from '@covalent/core';
 import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
+import { DragulaService } from 'ng2-dragula';
 
-import { Lineup, Player, PlayerInning, Position, Inning, GamePlayer, LineupsService } from '../../../services';
+import { Lineup, Player, PlayerInning, Position, Inning, GameInning, GamePlayer, LineupsService } from '../../../services';
 
 @Component({
   selector: 'qs-lineup-form',
@@ -16,23 +17,37 @@ import { Lineup, Player, PlayerInning, Position, Inning, GamePlayer, LineupsServ
 export class LineupsFormComponent implements OnInit, AfterViewInit {
 
   name: string;
+  displayName: string = "New Lineup";
   description: string;
   id: string;
   finished: boolean;
   lineup: Lineup;
   opponentName: string;
   field: string;
-  date: Date;
+  date: Date = new Date();
   playing: GamePlayer[];
   notPlaying: Player[];
   action: string;
   positions: Position[];
   innings: Inning[];
+  playingInnings: GameInning[];
 
   constructor(public af: AngularFire,
     private _route: ActivatedRoute,
     public _lineupsService: LineupsService,
-    public media: TdMediaService) { }
+    private dragulaService: DragulaService,
+    public media: TdMediaService) {}
+
+swap(list:Array<GamePlayer>, a: number, b: number) {
+    if (a < 0 || a >= list.length || b < 0 || b >= list.length) {
+        return list;
+    }
+
+    const temp = list[a];
+    list[a] = list[b];
+    list[b] = temp;
+
+}
 
   goBack(): void {
     window.history.back();
@@ -50,16 +65,30 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
     this._route.params.subscribe((params: { id: string }) => {
       let lineupId: string = params.id;
       this.id = lineupId;
+      this.date = new Date();
       this.loadLineup();
     });
+  }
+
+  stepChange(event: IStepChangeEvent): void {
+
+  }
+
+  moveDown(currentIndex:number, list:Array<GamePlayer>) {
+    this.swap(list, currentIndex, (currentIndex+1));
+    
+  }
+  moveUp(currentIndex:number, list:Array<GamePlayer>) {
+    this.swap(list, currentIndex, (currentIndex-1));
+    
   }
 
   loadLineup() {
     this._lineupsService.getPositions()
       .subscribe((positionData) => {
-         
+
         this.positions = positionData.map(this.toPosition);
-        console.log("positions:" + JSON.stringify(this.positions, null, 2));
+      //  console.log("positions:" + JSON.stringify(this.positions, null, 2));
       });
     this._lineupsService.getInnings()
       .subscribe((data) => {
@@ -68,6 +97,7 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
           .subscribe((playerData) => {
             console.log("playerData:" + JSON.stringify(playerData, null, 2));
             this.playing = playerData.map(this.toGamePlayer);
+            this.playingInnings = this.createGameInning();
           })
       });
 
@@ -77,7 +107,10 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
         if (data) {
           this.lineup = this.toLineup(this.id, data);
           this.opponentName = data.opponentName;
-          this.date = data.date;
+          if (data.date) {
+            this.date = data.date;
+          }
+
         }
         //console.log("data: " + JSON.stringify(data, null, 2));
 
@@ -120,7 +153,7 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
   }
 
   toGamePlayer(data): GamePlayer {
-   let playerPositions = LineupsService.createPlayerInnings();
+    let playerPositions = LineupsService.createPlayerInnings();
     return <GamePlayer>({
       id: data.id,
       name: data.name,
@@ -132,6 +165,8 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
       year: data.season,
       season: data.season,
       admin: data.admin,
+      color: data.color,
+      textColor: data.textColor,
       positions: playerPositions,
     });
   };

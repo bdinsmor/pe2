@@ -1,64 +1,58 @@
-<td-layout-nav >
+<td-layout-nav>
   <div td-toolbar-content layout="row" layout-align="center center" flex>
     <span>Ponytail Express</span>
-    
+
   </div>
 
-    <md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
-      <md-card-title>{{displayName}}</md-card-title>
-      <md-divider></md-divider>
-      <md-card-content class="push-bottom-none">
-        <form #userForm="ngForm">
-          <div layout="row">
-            <md-input-container flex> 
-              <input mdInput
-                      #displayNameElement
-                      #displayNameControl="ngModel"
-                      type="text" 
-                      placeholder="Display Name" 
-                      [(ngModel)]="displayName" 
-                      name="displayName" 
-                      maxlength="20" 
-                      required>
-              <md-hint align="start">
-                <span [hidden]="displayNameControl.pristine" class="tc-red-600">
+  <md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
+    <md-card-title [style.background]="color" [style.color]="tc">{{displayName}}</md-card-title>
+    <md-divider></md-divider>
+    <md-card-content class="push-bottom-none">
+      <form #userForm="ngForm">
+        <div layout="row">
+          <md-input-container flex>
+            <input mdInput #displayNameElement #displayNameControl="ngModel" type="text" placeholder="Display Name" [(ngModel)]="displayName"
+              name="displayName" maxlength="20" required>
+            <md-hint align="start">
+              <span [hidden]="displayNameControl.pristine" class="tc-red-600">
                   <span [hidden]="!displayNameControl.errors?.required">Required</span>
-                </span>
-              </md-hint>
-              <md-hint align="end">{{displayNameElement.value.length}} / 20</md-hint>
-            </md-input-container>
-          </div>
-          <div layout="row" class="push-top">
-            <md-input-container flex> 
-              <input mdInput
-                      #emailElement
-                      #emailControl="ngModel"
-                      type="text" 
-                      placeholder="Email" 
-                      [(ngModel)]="email" 
-                      name="email"
-                      maxlength="30"
-                      pattern="^[a-zA-Z0-9]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,15})$"
-                      required>
-              <md-hint align="start">
-                <span [hidden]="emailControl.pristine" class="tc-red-600">
+              </span>
+            </md-hint>
+            <md-hint align="end">{{displayNameElement.value.length}} / 20</md-hint>
+          </md-input-container>
+        </div>
+        <div layout="row" class="push-top">
+          <md-input-container flex>
+            <input mdInput #emailElement #emailControl="ngModel" type="text" placeholder="Email" [(ngModel)]="email" name="email" maxlength="30"
+              pattern="^[a-zA-Z0-9]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,15})$" required>
+            <md-hint align="start">
+              <span [hidden]="emailControl.pristine" class="tc-red-600">
                   <span [hidden]="!emailControl.errors?.required">Required</span>
-                  <span [hidden]="!emailControl.errors?.pattern">incorrect pattern</span>
-                </span>
-              </md-hint>
-              <md-hint align="end">{{emailElement.value.length}} / 30</md-hint>
-            </md-input-container>
-          </div>
-          <div layout="row">
-            <md-slide-toggle [(ngModel)]="admin" name="admin">Admin</md-slide-toggle>
-          </div>
-        </form>
-      </md-card-content>
-      <md-divider></md-divider>
-      <md-card-actions>
-        <button md-button [disabled]="!userForm.form.valid" color="primary" (click)="save()">SAVE</button>
-        <button md-button (click)="goBack()">CANCEL</button>
-      </md-card-actions>
-    </md-card>
- 
+              <span [hidden]="!emailControl.errors?.pattern">incorrect pattern</span>
+              </span>
+            </md-hint>
+            <md-hint align="end">{{emailElement.value.length}} / 30</md-hint>
+          </md-input-container>
+        </div>
+        <div layout="row" flex="40">
+          <md-input-container flex>
+            <input mdInput #colorElement placeholder="Row Color" [(colorPicker)]="color" [style.background]="color" [value]="color" />
+          </md-input-container>
+          
+        </div>
+        <div layout="row" flex="40">
+          <p>Text Color:&nbsp;&nbsp;</p>
+          <md-radio-group placeholder="Text Color" name="more_options" [(ngModel)]="tc">
+            <md-radio-button *ngFor="let txtcolor of colorOptions" name="more_options" [value]="txtcolor">{{txtcolor.toUpperCase()}}</md-radio-button>
+          </md-radio-group>
+        </div>
+      </form>
+    </md-card-content>
+    <md-divider></md-divider>
+    <md-card-actions>
+      <button md-button [disabled]="!userForm.form.valid" color="primary" (click)="save()">SAVE</button>
+      <button md-button (click)="goBack()">CANCEL</button>
+    </md-card-actions>
+  </md-card>
+
 </td-layout-nav>

@@ -13,7 +13,7 @@ import { FormComponent } from './form/form.component';
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: '', component: MainComponent, children: [{
-      component: DashboardComponent,
+      component: LineupsComponent,
       path: '',
     },
     {path: 'form', component: FormComponent},

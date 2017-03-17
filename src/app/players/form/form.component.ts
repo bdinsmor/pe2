@@ -20,11 +20,16 @@ export class PlayersFormComponent implements OnInit, OnDestroy, AfterViewInit {
   player: Player;
   action: string;
   image: string;
+  color: string;
+  tc: string = 'black';
   playerSubscription: any;
+  colorOptions: string[]
 
   constructor(public af: AngularFire,
     private _route: ActivatedRoute,
-    public media: TdMediaService) { }
+    public media: TdMediaService) { 
+      this.colorOptions = ['white', 'black'];
+    }
 
   goBack(): void {
     window.history.back();
@@ -55,10 +60,21 @@ export class PlayersFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.playerSubscription = this.af.database.object('/players/' + id)
       .subscribe((data) => {
-        console.log("data: " + JSON.stringify(data, null, 2));
         this.player = toPlayer(id, data);
         this.displayName = this.player.name;
         this.email = this.player.email;
+        if(this.player.color) {
+          this.color = this.player.color;
+        } else {
+          this.color = '#127bdc';
+        }
+        if(this.player.textColor && this.player.textColor !== '') {
+          console.log('setting textcolor');
+          this.tc = this.player.textColor === '#fff' ? 'white' : 'black';
+        } else {
+          this.tc = 'black';
+        }
+        console.log('text color:  ' + this.tc);
         this.id = id;
       });
 
@@ -74,8 +90,11 @@ export class PlayersFormComponent implements OnInit, OnDestroy, AfterViewInit {
   save(): void {
     let siteAdmin: number = (this.admin ? 1 : 0);
     let now: Date = new Date();
+    console.log("this.tc:  "+ this.tc);
     this.player = <Player>({
       name: this.displayName,
+      color: this.color,
+      textColor: this.tc === 'white' ? '#fff' : '#000',
       email: this.email,
       description: '',
       year: 2017,
@@ -118,6 +137,8 @@ function toPlayer(id: string, r: any): Player {
     description: json.description,
     birthdate: json.birthDate,
     year: json.year,
-    season: json.season
+    season: json.season,
+    color: json.color,
+    textColor: json.textColor,
   });
 }

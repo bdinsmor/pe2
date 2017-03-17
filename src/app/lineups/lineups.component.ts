@@ -157,6 +157,8 @@ toGamePlayer(player) {
     admin: player.admin,
     positions: player.positions,
     hitting: player.hitting,
+    color: player.color,
+    textColor: player.textColor,
   });
 
 }

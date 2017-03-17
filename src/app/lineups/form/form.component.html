@@ -5,52 +5,81 @@
     </div>
 
     <md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
-        <md-card-title>{{displayName}}</md-card-title>
-        <md-divider></md-divider>
         <md-card-content class="push-bottom-none">
-            <form #userForm="ngForm">
-                <div layout="row">
-                    <md-slide-toggle [(ngModel)]="finished" name="finished">Game Completed</md-slide-toggle>
-
-                    <md2-datepicker [(ngModel)]="date" name="date"></md2-datepicker>
-                    <md-input-container flex>
-                        <input mdInput #displayNameElement #displayNameControl="ngModel" type="text" placeholder="Opponent Name" [(ngModel)]="opponentName" name="opponentName" maxlength="30" required>
-                        <md-hint align="start">
-                            <span [hidden]="displayNameControl.pristine" class="tc-red-600">
+            <form #lineupForm="ngForm">
+                <td-steps (stepChange)="stepChange($event)" mode="horizontal">
+                    <td-step label="Game Information" active="true">
+                        <div layout="row" layout-margin class="push-top">
+                            <md2-datepicker flex="20" [(ngModel)]="date" name="date" format="MMM dd yyyy"></md2-datepicker>
+                            <md-input-container flex="50">
+                                <input mdInput #displayNameElement #displayNameControl="ngModel" type="text" placeholder="Opponent Name" [(ngModel)]="opponentName"
+                                    name="opponentName" maxlength="30" required>
+                                <md-hint align="start">
+                                    <span [hidden]="displayNameControl.pristine" class="tc-red-600">
                   <span [hidden]="!displayNameControl.errors?.required">Required</span>
-                            </span>
-                        </md-hint>
-                        <md-hint align="end">{{displayNameElement.value.length}} / 30</md-hint>
-                    </md-input-container>
-                </div>
-                <div layout="row">
-                    <table td-data-table>
-                        <th td-data-table-column>
-                            <span>Player Name</span>
-                        </th>
-                        <th td-data-table-column *ngFor="let inning of innings">
-                            {{inning.label}}
-                        </th>
-                        <tr td-data-table-row *ngFor="let player of playing">
-                            <td td-data-table-cell (click)="loadPlayer(player)">
-                                <button md-button>{{player | json}}</button>
-                            </td>
-                            <td td-data-table-cell *ngFor="let inning of innings">
-                                <md-select floatPlaceholder="never" placeholder="Position">
-                                    <!--" [(ngModel)="player.positions[inning.sortValue]"  need to populate player innings so this will work -->
-                                    <md-option *ngFor="let position of positions" [value]="position">
-                                        {{position.abbreviation}}
-                                    </md-option>
-                                </md-select>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                                    </span>
+                                </md-hint>
+                                <md-hint align="end">{{displayNameElement.value.length}} / 30</md-hint>
+                            </md-input-container>
+                        </div>
+                        <div flex="50" layout="row" layout-margin layout-align="start start">
+                            <md-slide-toggle flex [(ngModel)]="finished" name="finished">Game Completed</md-slide-toggle>
+
+                        </div>
+                    </td-step>
+                    <td-step label="Batting Order">
+                        <table td-data-table>
+                            <th td-data-table-column flex="5">
+                                <span>Order</span>
+                            </th>
+                            <th td-data-table-column width="10" flex="10">
+                            </th>
+                            <th td-data-table-column>
+                                <span>Player Name</span>
+                            </th>
+                            <!--<th td-data-table-column *ngFor="let inning of innings">
+                                {{inning.label}}
+                            </th>-->
+                            <tr flex [style.color]="player.textColor" [style.background]="player.color" td-data-table-row *ngFor="let player of playing; let i = index; let firstPlayer = first;let lastPlayer = last;">
+                                <td td-data-table-cell width="5" flex="5">
+                                    {{(i+1)}}
+                                </td>
+                                <td td-data-table-cell width="10%" flex="10">
+                                    <button md-icon-button [style.color]="player.textColor" disabled="{{firstPlayer}}" (click)="moveUp(i,playing)"><md-icon>keyboard_arrow_up</md-icon></button>
+                                    <button
+                                        md-icon-button [style.color]="player.textColor" disabled="{{lastPlayer}}" (click)="moveDown(i,playing)">
+                                        <md-icon>keyboard_arrow_down</md-icon>
+                                        </button>
+                                </td>
+                                <td td-data-table-cell flex>
+                                    <button md-button (click)="loadPlayer(player)">{{player.name}}</button>
+                                </td>
+
+                            </tr>
+                        </table>
+
+                    </td-step>
+                    <td-step label="Fielding Positions">
+                        <div class="diagram" *ngFor="let inning of gameInnings; let i = index;">
+                            <h2>{{i+1}}</h2>
+                            <label *ngFor="let p of inning.positions">{{p.player.name}}</label>
+                            <div class="md-padding md-whiteframe-1dp sittingBox"><strong>Sitting:</strong>
+                                <div class="sitting">
+                                    <div ng-repeat="let sittingPlayer of inning.positions">
+                                        <div *ngIf="sittingPlayer.label === 'BN'" style="padding:3px" class="{{sittingPlayer.lowercasename}} sitting"> {{sittingPlayer.name}} </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </td-step>
+                </td-steps>
+
             </form>
         </md-card-content>
         <md-divider></md-divider>
         <md-card-actions>
-            <button md-button [disabled]="!userForm.form.valid" color="primary" (click)="save()">SAVE</button>
+            <button md-button [disabled]="!lineupForm.form.valid" color="primary" (click)="save()">SAVE</button>
             <button md-button (click)="goBack()">CANCEL</button>
         </md-card-actions>
     </md-card>

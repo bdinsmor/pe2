@@ -11,7 +11,8 @@ export class Player {
   season: string;
   id: string;
   admin: number;
-
+  color: string;
+  textColor: string;
 }
 
 export class GamePlayer {
@@ -27,7 +28,8 @@ export class GamePlayer {
   admin: number;
   positions: PlayerInning[];
   hitting: AtBat[];
-
+  color: string;
+  textColor: string;
 }
 
 export class AtBat {

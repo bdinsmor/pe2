@@ -40,7 +40,7 @@ export class PlayersComponent implements OnInit, OnDestroy, AfterViewInit {
     this.playersSubscription = this.af.database.list('/players').subscribe(players => {
 
       this.filteredPlayers = players.map(toPlayer);
-      console.log('players: ' + JSON.stringify(this.filteredPlayers, null, 2));
+     // console.log('players: ' + JSON.stringify(this.filteredPlayers, null, 2));
       this.players = this.filteredPlayers;
       this._loadingService.resolve('players.list');
 
@@ -147,7 +147,7 @@ export class PlayersComponent implements OnInit, OnDestroy, AfterViewInit {
 }
 
 function toPlayer(json: any): Player {
-  //console.log("json: " + JSON.stringify(json,null,2));
+  console.log("json: " + JSON.stringify(json,null,2));
   return <Player>({
     id: json.$key,
     name: json.name,
@@ -157,7 +157,9 @@ function toPlayer(json: any): Player {
     description: json.description,
     birthdate: json.birthDate,
     year: json.year,
-    season: json.season
+    season: json.season,
+    color: json.color,
+    textColor: json.textColor,
   });
 }
 

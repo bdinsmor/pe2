@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Player } from './players.service';
+import { GamePlayer } from './players.service';
 import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 
 export class Lineup {
@@ -9,11 +9,11 @@ export class Lineup {
   date: Date;
   opponentName: string;
   finished: number;
-  playing: Player[];
-  notPlaying: Player[];
+  playing: GamePlayer[];
+  notPlaying: GamePlayer[];
   constructor() {
-    this.playing = new Array<Player>();
-    this.notPlaying = new Array<Player>();
+    this.playing = new Array<GamePlayer>();
+    this.notPlaying = new Array<GamePlayer>();
   }
 }
 
@@ -34,9 +34,9 @@ export class GamePosition {
   name: string;
   sortValue: number;
   restricted: number;
-  player: Player;
+  player: GamePlayer;
   constructor() {
-    this.player = new Player();
+    this.player = new GamePlayer();
   }
 }
 
@@ -54,6 +54,8 @@ export class Inning {
     this.sortValue = 1;
   }
 }
+
+
 
 export class PlayerInning {
   // keep track of what position the player played this inning
@@ -141,7 +143,7 @@ export class LineupsService {
 
   static createPlayerInnings(): PlayerInning[] {
     let playerInnings: PlayerInning[] = new Array<PlayerInning>();
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i <= 6; i++) {
       let pi: PlayerInning = new PlayerInning();
       let inning = this.getInning(i);
       pi.inning = inning;
