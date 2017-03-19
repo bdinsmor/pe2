@@ -13,6 +13,9 @@ export class Player {
   admin: number;
   color: string;
   textColor: string;
+  constructor() {
+    this.name = 'Brian';
+  }
 }
 
 export class GamePlayer {
@@ -30,6 +33,9 @@ export class GamePlayer {
   hitting: AtBat[];
   color: string;
   textColor: string;
+  constructor() {
+    this.name = 'Brian';
+  }
 }
 
 export class AtBat {

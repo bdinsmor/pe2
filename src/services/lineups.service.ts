@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GamePlayer } from './players.service';
+import { Player, GamePlayer } from './players.service';
 import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 
 export class Lineup {
@@ -34,9 +34,9 @@ export class GamePosition {
   name: string;
   sortValue: number;
   restricted: number;
-  player: GamePlayer;
+  player: Player;
   constructor() {
-    this.player = new GamePlayer();
+    this.player = new Player();
   }
 }
 
@@ -69,12 +69,12 @@ export class PlayerInning {
 export class GameInning {
   inning: Inning;
   positions: Position[];
+  constructor(inningNumber) {
+    this.inning = new Inning();
+    this.positions = new Array<Position>();
+  }
 }
 
-function createGameInning(): GameInning {
- let gi:GameInning = new GameInning();
- return gi;
-}
 
 // left off keeping track of what innings have what players, and what positions players are playing for each inning
 /*
@@ -152,4 +152,90 @@ export class LineupsService {
     }
     return playerInnings;
   }
+
+  // tslint:disable-next-line:member-ordering
+  static createPositionInnings(numPlayers): GameInning[] {
+    let gameInnings: GameInning[] = new Array<GameInning>();
+    for (let i = 0; i < 6; i++) {
+      let pi: GameInning = new GameInning(i);
+      let inning = this.getInning(i);
+      pi.inning = inning;
+      pi.positions = this.getDefaultPositions(numPlayers);
+      gameInnings.push(pi);
+    }
+  //  console.log("game innings: " + JSON.stringify(gameInnings,null,2));
+    return gameInnings;
+  }
+
+  // tslint:disable-next-line:member-ordering
+  static getDefaultPositions(numPlayers): Position[] {
+    let positions: Position[] = new Array<Position>();
+    for (let i = 0; i < numPlayers; i++) {
+      if (numPlayers >= 10) {
+        positions.push(this.toPosition(10,i));
+      } else {
+        positions.push(this.toPosition(9,i));
+      }
+    }
+    return positions;
+  }
+
+  // tslint:disable-next-line:member-ordering
+  static toPosition(total: number, num: number): GamePosition {
+    if (total === 10) {
+    switch (num) {
+      case 0:
+        return <GamePosition>({ id: '', sortValue: 0, abbreviation: "BN", restricted: 0, name: 'Bench', label: 'Bench', style: 'bench', player: new Player()  });
+      case 1:
+        return <GamePosition>({ id: '', sortValue: 1, abbreviation: 'P', restricted: 0, name: 'Pitcher', label: 'Pitcher', style: 'pitcher', player: new Player()  });
+      case 2:
+        return <GamePosition>({ id: '', sortValue: 2, abbreviation: 'C', restricted: 0, name: 'Catcher', label: 'Catcher', style: 'catcher', player: new Player()  });
+      case 3:
+        return <GamePosition>({ id: '', sortValue: 3, abbreviation: '1B', restricted: 0, name: '1st Base', label: 'First Base', style:'firstbase', player: new Player()  });
+      case 4:
+        return <GamePosition>({ id: '', sortValue: 4, abbreviation: '2B', restricted: 0, name: '2nd Base', label: '2nd Base', style: 'secondbase', player: new Player()  });
+      case 5:
+        return <GamePosition>({ id: '', sortValue: 5, abbreviation: '3B', restricted: 0, name: '3rd Base', label: '3rd Base', style: 'thirdbase', player: new Player()  });
+      case 6:
+        return <GamePosition>({ id: '', sortValue: 6, abbreviation: 'SS', restricted: 0, name: 'Shortstop', label: 'Shortstop', style: 'shortstop', player: new Player()  });
+      case 7:
+        return <GamePosition>({ id: '', sortValue: 7, abbreviation: 'LF', restricted: 0, name: 'Left Field', label: 'Left Field', style: 'leftfield', player: new Player()  });
+      case 8:
+        return <GamePosition>({ id: '', sortValue: 8, abbreviation: 'LCF', restricted: 0, name: 'Left Center Field', label: 'Left Center Field', style: 'leftcenterfield', player: new Player()  });
+      case 9:
+        return <GamePosition>({ id: '', sortValue: 9, abbreviation: 'RCF', restricted: 0, name: 'Right Center Field', label: 'Right Center Field', style: 'rightcenterfield', player: new Player()  });
+      case 10:
+        return <GamePosition>({ id: '', sortValue: 10, abbreviation: 'RF', restricted: 0, name: 'Right Field', label: 'Right Field', style:'rightfield', player: new Player()  });
+      default:
+        return <GamePosition>({ id: '', sortValue: 0, abbreviation: 'BN', restricted: 0, name: 'Bench', label: 'Bench', style:'bench', player: new Player() });
+    }
+  } else {
+    switch (num) {
+      case 0:
+        return <GamePosition>({ id: '', sortValue: 0, abbreviation: 'BN', restricted: 0, name: 'Bench', label: 'Bench', style: 'bench', player: new Player()  });
+      case 1:
+        return <GamePosition>({ id: '', sortValue: 1, abbreviation: 'P', restricted: 0, name: 'Pitcher', label: 'Pitcher', style: 'pitcher', player: new Player()  });
+      case 2:
+        return <GamePosition>({ id: '', sortValue: 2, abbreviation: 'C', restricted: 0, name: 'Catcher', label: 'Catcher', style: 'catcher', player: new Player()  });
+      case 3:
+        return <GamePosition>({ id: '', sortValue: 3, abbreviation: '1B', restricted: 0, name: '1st Base', label: 'First Base', style:'firstbase', player: new Player()  });
+      case 4:
+        return <GamePosition>({ id: '', sortValue: 4, abbreviation: '2B', restricted: 0, name: '2nd Base', label: '2nd Base', style: 'secondbase', player: new Player()  });
+      case 5:
+        return <GamePosition>({ id: '', sortValue: 5, abbreviation: '3B', restricted: 0, name: '3rd Base', label: '3rd Base', style: 'thirdbase', player: new Player()  });
+      case 6:
+        return <GamePosition>({ id: '', sortValue: 6, abbreviation: 'SS', restricted: 0, name: 'Shortstop', label: 'Shortstop', style: 'shortstop', player: new Player()  });
+      case 7:
+        return <GamePosition>({ id: '', sortValue: 7, abbreviation: 'LF', restricted: 0, name: 'Left Field', label: 'Left Field', style: 'leftfield', player: new Player()  });
+      case 8:
+        // tslint:disable-next-line:max-line-length
+        return <GamePosition>({ id: '', sortValue: 8, abbreviation: 'CF', restricted: 0, name: 'Center Field', label: 'Center Field', style: 'centerfield', player: new Player()  });
+      case 9:
+        // tslint:disable-next-line:max-line-length
+        return <GamePosition>({ id: '', sortValue: 9, abbreviation: 'RF', restricted: 0, name: 'Right Field', label: 'Right Field', style: 'rightfield', player: new Player()  });
+     default:
+      return <GamePosition>({ id: '', sortValue: 0, abbreviation: 'BN', restricted: 0, name: 'Bench', label: 'Bench', style:'bench', player: new Player()  });
+      }
+    }
+}
 }

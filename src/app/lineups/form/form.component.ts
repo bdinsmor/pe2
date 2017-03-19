@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Md2Datepicker } from 'md2';
 import { TdMediaService, IStepChangeEvent } from '@covalent/core';
 import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
-import { DragulaService } from 'ng2-dragula';
 
 import { Lineup, Player, PlayerInning, Position, Inning, GameInning, GamePlayer, LineupsService } from '../../../services';
 
@@ -17,7 +16,7 @@ import { Lineup, Player, PlayerInning, Position, Inning, GameInning, GamePlayer,
 export class LineupsFormComponent implements OnInit, AfterViewInit {
 
   name: string;
-  displayName: string = "New Lineup";
+  displayName: string = 'New Lineup';
   description: string;
   id: string;
   finished: boolean;
@@ -26,7 +25,7 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
   field: string;
   date: Date = new Date();
   playing: GamePlayer[];
-  notPlaying: Player[];
+  notPlaying: GamePlayer[];
   action: string;
   positions: Position[];
   innings: Inning[];
@@ -35,10 +34,11 @@ export class LineupsFormComponent implements OnInit, AfterViewInit {
   constructor(public af: AngularFire,
     private _route: ActivatedRoute,
     public _lineupsService: LineupsService,
-    private dragulaService: DragulaService,
-    public media: TdMediaService) {}
+    public media: TdMediaService) {
+      this.playingInnings = new Array<GameInning>();
+    }
 
-swap(list:Array<GamePlayer>, a: number, b: number) {
+swap(list: GamePlayer[], a: number, b: number) {
     if (a < 0 || a >= list.length || b < 0 || b >= list.length) {
         return list;
     }
@@ -61,6 +61,8 @@ swap(list:Array<GamePlayer>, a: number, b: number) {
   ngOnInit(): void {
     this._route.url.subscribe((url: any) => {
       this.action = (url.length > 1 ? url[1].path : 'add');
+      this.date = new Date();
+      this.loadLineup();
     });
     this._route.params.subscribe((params: { id: string }) => {
       let lineupId: string = params.id;
@@ -70,23 +72,27 @@ swap(list:Array<GamePlayer>, a: number, b: number) {
     });
   }
 
-  stepChange(event: IStepChangeEvent): void {
+  stepChange(event: IStepChangeEvent): void {}
 
+  moveDown(currentIndex: number, list: GamePlayer[]) {
+    this.swap(list, currentIndex, (currentIndex + 1));
+  }
+  moveUp(currentIndex: number, list: GamePlayer[]) {
+    this.swap(list, currentIndex, (currentIndex - 1));
   }
 
-  moveDown(currentIndex:number, list:Array<GamePlayer>) {
-    this.swap(list, currentIndex, (currentIndex+1));
-    
-  }
-  moveUp(currentIndex:number, list:Array<GamePlayer>) {
-    this.swap(list, currentIndex, (currentIndex-1));
-    
-  }
 
   loadLineup() {
+    this.playingInnings = LineupsService.createPositionInnings(12);
     this._lineupsService.getPositions()
       .subscribe((positionData) => {
-
+        this._lineupsService.getPlayers()
+          .subscribe((playerData) => {
+          //  console.log("playerData:" + JSON.stringify(playerData, null, 2));
+            this.playing = playerData.map(this.toGamePlayer);
+           // this.playingInnings = LineupsService.createPositionInnings(this.playing.length);
+         //     console.log("playingInnings: " + JSON.stringify(this.playingInnings,null,2));
+          });
         this.positions = positionData.map(this.toPosition);
       //  console.log("positions:" + JSON.stringify(this.positions, null, 2));
       });
@@ -95,10 +101,11 @@ swap(list:Array<GamePlayer>, a: number, b: number) {
         this.innings = data.map(this.toInning);
         this._lineupsService.getPlayers()
           .subscribe((playerData) => {
-            console.log("playerData:" + JSON.stringify(playerData, null, 2));
+          //  console.log("playerData:" + JSON.stringify(playerData, null, 2));
             this.playing = playerData.map(this.toGamePlayer);
-            this.playingInnings = this.createGameInning();
-          })
+            this.playingInnings = LineupsService.createPositionInnings(this.playing.length);
+         //     console.log("playingInnings: " + JSON.stringify(this.playingInnings,null,2));
+          });
       });
 
 
@@ -112,7 +119,7 @@ swap(list:Array<GamePlayer>, a: number, b: number) {
           }
 
         }
-        //console.log("data: " + JSON.stringify(data, null, 2));
+        // console.log("data: " + JSON.stringify(data, null, 2));
 
       });
   }
@@ -147,7 +154,7 @@ swap(list:Array<GamePlayer>, a: number, b: number) {
         id: '',
         inning: this.innings[i],
         position: null,
-      }))
+      }));
     }
     return inn;
   }
@@ -192,5 +199,3 @@ swap(list:Array<GamePlayer>, a: number, b: number) {
     }
   }
 }
-
-

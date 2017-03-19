@@ -8,18 +8,15 @@ import { CovalentChartsModule } from '@covalent/charts';
 import { CovalentExpansionPanelModule } from '@covalent/core';
 import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { PlayersComponent } from './players/players.component';
 import { PlayersFormComponent } from './players/form/form.component';
 import { LineupsFormComponent } from './lineups/form/form.component';
 import { LineupsComponent } from './lineups/lineups.component';
-import { FormComponent } from './form/form.component';
 import { LoginComponent } from './login/login.component';
 import { appRoutes, appRoutingProviders } from './app.routes';
 import { RequestInterceptor } from '../config/interceptors/request.interceptor';
 import { Md2Module } from 'md2';
-import { DragulaModule } from 'ng2-dragula';
-import {ColorPickerModule} from 'angular2-color-picker';
+import {ColorPickerModule} from 'ngx-color-picker';
 
 import { AngularFireModule, AuthMethods, AuthProviders } from 'angularfire2';
 
@@ -41,17 +38,14 @@ const firebaseConfig = {
   declarations: [
     AppComponent,
     MainComponent,
-    DashboardComponent,
     PlayersComponent,
     PlayersFormComponent,
     LineupsComponent,
     LineupsFormComponent,
-    FormComponent,
     LoginComponent,
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     BrowserModule,
-    DragulaModule,
     ColorPickerModule,
     Md2Module.forRoot(),
     CovalentCoreModule.forRoot(),

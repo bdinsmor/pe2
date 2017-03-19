@@ -1,13 +1,11 @@
 import { Routes, RouterModule } from '@angular/router';
 
 import { MainComponent } from './main/main.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { PlayersComponent } from './players/players.component';
 import { PlayersFormComponent } from './players/form/form.component';
 import { LineupsComponent } from './lineups/lineups.component';
 import { LineupsFormComponent } from './lineups/form/form.component';
 import { LoginComponent } from './login/login.component';
-import { FormComponent } from './form/form.component';
 
 
 const routes: Routes = [
@@ -16,7 +14,6 @@ const routes: Routes = [
       component: LineupsComponent,
       path: '',
     },
-    {path: 'form', component: FormComponent},
     {path: 'players', children: [
       {path: '', component: PlayersComponent},
       {path: 'add', component: PlayersFormComponent},

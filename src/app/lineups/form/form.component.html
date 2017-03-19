@@ -12,8 +12,7 @@
                         <div layout="row" layout-margin class="push-top">
                             <md2-datepicker flex="20" [(ngModel)]="date" name="date" format="MMM dd yyyy"></md2-datepicker>
                             <md-input-container flex="50">
-                                <input mdInput #displayNameElement #displayNameControl="ngModel" type="text" placeholder="Opponent Name" [(ngModel)]="opponentName"
-                                    name="opponentName" maxlength="30" required>
+                                <input mdInput #displayNameElement #displayNameControl="ngModel" type="text" placeholder="Opponent Name" [(ngModel)]="opponentName" name="opponentName" maxlength="30" required>
                                 <md-hint align="start">
                                     <span [hidden]="displayNameControl.pristine" class="tc-red-600">
                   <span [hidden]="!displayNameControl.errors?.required">Required</span>
@@ -46,8 +45,7 @@
                                 </td>
                                 <td td-data-table-cell width="10%" flex="10">
                                     <button md-icon-button [style.color]="player.textColor" disabled="{{firstPlayer}}" (click)="moveUp(i,playing)"><md-icon>keyboard_arrow_up</md-icon></button>
-                                    <button
-                                        md-icon-button [style.color]="player.textColor" disabled="{{lastPlayer}}" (click)="moveDown(i,playing)">
+                                    <button md-icon-button [style.color]="player.textColor" disabled="{{lastPlayer}}" (click)="moveDown(i,playing)">
                                         <md-icon>keyboard_arrow_down</md-icon>
                                         </button>
                                 </td>
@@ -60,13 +58,20 @@
 
                     </td-step>
                     <td-step label="Fielding Positions">
-                        <div class="diagram" *ngFor="let inning of gameInnings; let i = index;">
-                            <h2>{{i+1}}</h2>
-                            <label *ngFor="let p of inning.positions">{{p.player.name}}</label>
+
+                        <div class="diagram" *ngFor="let piData of playingInnings; let i = index;">
+                            <div *ngFor="let p of piData.positions">
+                                <md-select class="mylabel {{p.style}}" name="position" [(ngModel)]="p.player" #selectControl="ngModel">
+                                    <md-option *ngFor="let gp of playing" [value]="gp">{{gp.name}}</md-option>
+
+                                </md-select>
+                                <label *ngIf="p.label !== 'Bench'" class="mylabel {{p.style}}">{{p.player.name}}</label>
+                            </div>
+
                             <div class="md-padding md-whiteframe-1dp sittingBox"><strong>Sitting:</strong>
                                 <div class="sitting">
-                                    <div ng-repeat="let sittingPlayer of inning.positions">
-                                        <div *ngIf="sittingPlayer.label === 'BN'" style="padding:3px" class="{{sittingPlayer.lowercasename}} sitting"> {{sittingPlayer.name}} </div>
+                                    <div *ngFor="let p of piData.positions">
+                                        <label *ngIf="p.label == 'Bench'">{{p.label}}</label>
                                     </div>
                                 </div>
                             </div>
